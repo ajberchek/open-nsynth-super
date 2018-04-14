@@ -75,7 +75,7 @@ install_deps() {
         libraw1394-dev libudev-dev libdrm-dev libglew-dev libopenal-dev \
         libsndfile-dev libfreeimage-dev libcairo2-dev libfreetype6-dev \
         libssl-dev libpulse-dev libusb-1.0-0-dev libopencv-dev \
-        libegl1-mesa-dev libgles1-mesa-dev libgles2-mesa-dev libassimp-dev \
+        libegl1-mesa-dev libgles2-mesa-dev libassimp-dev \
         librtaudio-dev libboost-filesystem-dev
 }
 
