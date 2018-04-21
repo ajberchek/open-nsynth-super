@@ -1,5 +1,4 @@
 // Socket implementation adapted from: https://www.geeksforgeeks.org/socket-programming-cc/
-#include <unistd.h>
 #include <stdio.h>
 #include <sys/socket.h>
 #include <stdlib.h>
@@ -8,19 +7,23 @@
 #include <mutex>
 #include <thread>
 #include <iostream>
-#define PORT    	4242
-#define DATA_LEN	4
+#include <vector>
+#define PORT    4242
+#define DATA_LEN = 4
 
 class InstrumentServer {
     public:
     InstrumentServer() {
+        // Creating socket file descriptor
         if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
             perror("socket failed");
             exit(EXIT_FAILURE);
         }
         
+        // Forcefully attaching socket to the port
         if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT,
-                                                    &opt, sizeof(opt))) {
+                                                    &opt, sizeof(opt)))
+        {
             perror("setsockopt");
             exit(EXIT_FAILURE);
         }
@@ -30,11 +33,13 @@ class InstrumentServer {
         
         // Forcefully attaching socket to the port
         if (bind(server_fd, (struct sockaddr *)&address, 
-                                    sizeof(address))<0) {
+                                    sizeof(address))<0)
+        {
             perror("bind failed");
             exit(EXIT_FAILURE);
         }
-        if (listen(server_fd, 3) < 0) {
+        if (listen(server_fd, 3) < 0)
+        {
             perror("listen");
             exit(EXIT_FAILURE);
         }
@@ -61,6 +66,17 @@ class InstrumentServer {
             }
         }).detach();
     }
+
+    std::vector<char> getCoords() {
+        std::vector<char> toRet;
+        m.lock();
+        toRet.push_back(currentData[0]);
+        toRet.push_back(currentData[1]);
+        toRet.push_back(currentData[2]);
+        toRet.push_back(currentData[3]);
+        m.unlock();
+        return toRet;
+    } 
 
     private:
         int server_fd, new_socket;

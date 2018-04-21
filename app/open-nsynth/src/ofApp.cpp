@@ -164,56 +164,11 @@ void ofApp::update(){
 
 
 void ofApp::readInputs(){
-	if(i2c < 0){
-		return;
-	}
 
-	// Switch to the MCU address.
-	if(ioctl(i2c, I2C_SLAVE, MCU_I2C_ADDR) < 0){
-		return;
-	}
+	// TODO read from socket
+	std::vector<char> data = server.getCoords();
 
-	// Issue an SMBus read from address 0.
-	uint8_t buf[1] = {0};
-	if(write(i2c, buf, 1) != 1){
-		return;
-	}
-
-	// Read the whole inputs message from the MCU.
-	InputsMessage message;
-	if(read(i2c, &message, sizeof(message)) != sizeof(message)){
-		return;
-	}
-
-	// Check the checksum.
-	uint32_t *src = reinterpret_cast<uint32_t *>(&message);
-	uint32_t chk = 0xaa55aa55;
-	chk += src[0];
-	chk += src[1];
-	chk += src[2];
-	if(chk != message.chk){
-		return;
-	}
-
-	if(!inputsRead){
-		// Set the initial values of the analog inputs.
-		for(int i=0; i<6; ++i){
-			analogInputs[i].init(message.potentiometers[i]);
-		}
-	}else{
-		// Update the analog inputs.
-		for(int i=0; i<6; ++i){
-			updateAnalogInput(i, message.potentiometers[i], false);
-		}
-
-		// Update the instrument selections.
-		for(int i=0; i<4; ++i){
-			int8_t delta = message.rotaries[i] - lastInputsMessage.rotaries[i];
-			updateRotary(i, delta);
-		}
-	}
-
-	updateGridSelection({message.touch[0], message.touch[1]});
+	updateGridSelection({data[0], data[1]});
 
 	inputsRead = true;
 	lastInputsMessage = message;
