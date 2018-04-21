@@ -12,3 +12,4 @@ Commands that need to be run in separate terminals:
 - sudo open-nsynth-super/app/open-nsynth/bin/open-nsynth
 - vmpk
 	- Under edit->connections, enable MIDI thru on MIDI output and set the Output MIDI connection to Virtual Raw MIDI 1-0:0
+- Instead of vmpk, use `aplaymidi` to play a midi file
