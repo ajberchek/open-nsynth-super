@@ -9,6 +9,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+OF_DIR=../opt
 
 setup_audio() {
     if grep -q '^dtparam=audio=on' /boot/config.txt
@@ -63,56 +64,33 @@ setup_serial() {
 
 install_deps() {
     apt-get update
-    apt-get install -y i2c-tools python-smbus gdb-arm-none-eabi gcc-arm-none-eabi \
+    apt-get install -y autotools-dev autoconf automake curl \
         git autoconf libtool make pkg-config build-essential \
         libcairo-dev gstreamer0.10-dev gstreamer0.10-x \
         gstreamer0.10-plugins-base-apps gstreamer0.10-alsa \
         libudev-dev libsndfile-dev libopenal-dev libssl-dev \
-        gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
+        gstreamer0.10-plugins-good \
         gstreamer-plugins-base0.10-dev freeglut3-dev libasound2-dev \
-        libxmu-dev libxxf86vm-dev libgl1-mesa-dev libglu1-mesa-dev \
+        libxmu-dev libxxf86vm-dev \
         libraw1394-dev libudev-dev libdrm-dev libglew-dev libopenal-dev \
         libsndfile-dev libfreeimage-dev libcairo2-dev libfreetype6-dev \
         libssl-dev libpulse-dev libusb-1.0-0-dev libopencv-dev \
-        libegl1-mesa-dev libgles1-mesa-dev libgles2-mesa-dev libassimp-dev \
+        libegl1-mesa-dev libgles2-mesa-dev libassimp-dev \
         librtaudio-dev libboost-filesystem-dev
 }
 
-
-setup_service() {
-    svc=/etc/systemd/system/open-nsynth.service
-    if ! [ -e ${svc} ]
-    then
-        cat > ${svc} <<EOF
-[Unit]
-Description=Open NSynth
-After=alsa.restore
-
-[Service]
-Type=simple
-User=pi
-WorkingDirectory=/home/pi/opt/of/apps/open-nsynth/open-nsynth/bin
-ExecStart=/home/pi/opt/of/apps/open-nsynth/open-nsynth/bin/open-nsynth
-Restart=on-abort
-
-[Install]
-WantedBy=multi-user.target
-EOF
-        systemctl enable open-nsynth
-    fi
-}
-
-
 setup_openframeworks() {
-    if ! [ -e /home/pi/opt/of ]
+    if ! [ -e ${OF_DIR}/of ]
     then
         echo "Fetching openFrameworks"
-        mkdir -p /home/pi/opt
+        mkdir -p ${OF_DIR}
         (
-            cd /home/pi/opt
-            curl http://openframeworks.cc/versions/v0.9.8/of_v0.9.8_linuxarmv6l_release.tar.gz | tar -xzf -
-            mv of_v0.9.8_linuxarmv6l_release of
-            #sudo of/scripts/linux/debian/install_dependencies.sh
+            cd ${OF_DIR}
+            wget http://openframeworks.cc/versions/v0.9.8/of_v0.9.8_linux64_release.tar.gz
+            tar -xzf of_v0.9.8_linux64_release.tar.gz
+            rm of_v0.9.8_linux64_release.tar.gz
+            mv of_v0.9.8_linux64_release of
+            sudo of/scripts/linux/ubuntu/install_dependencies.sh
         )
     fi
 }
@@ -122,9 +100,9 @@ setup_openocd() {
     if ! [ -e /usr/bin/openocd ]
     then
         echo "Installing OpenOCD"
-        mkdir -p /home/pi/tmp/setup
+        mkdir -p /tmp/setup
         (
-            cd /home/pi/tmp/setup
+            cd /tmp/setup
             git clone git://git.code.sf.net/p/openocd/code openocd
             cd openocd
             git checkout v0.10.0
@@ -139,11 +117,8 @@ setup_openocd() {
 
 if [ "$(whoami)" = "root" ]
 then
-    setup_audio
-    setup_i2c
-    setup_serial
+    #setup_audio
     install_deps
-    setup_service
 else
     sudo bash $0
     setup_openframeworks
