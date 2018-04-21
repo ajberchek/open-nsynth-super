@@ -8,8 +8,8 @@
 #include <thread>
 #include <iostream>
 #include <vector>
-#define PORT    4242
-#define DATA_LEN = 4
+#define PORT    	4242
+#define DATA_LEN 	4
 
 class InstrumentServer {
     public:

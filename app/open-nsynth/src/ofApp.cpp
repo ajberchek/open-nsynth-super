@@ -164,14 +164,11 @@ void ofApp::update(){
 
 
 void ofApp::readInputs(){
-
-	// TODO read from socket
 	std::vector<char> data = server.getCoords();
 
 	updateGridSelection({data[0], data[1]});
 
 	inputsRead = true;
-	lastInputsMessage = message;
 }
 
 
