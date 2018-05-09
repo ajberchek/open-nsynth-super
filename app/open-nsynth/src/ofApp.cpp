@@ -165,8 +165,16 @@ void ofApp::update(){
 
 void ofApp::readInputs(){
 	std::vector<char> data = server.getCoords();
+	float a,b,c,d;
+	a = float(data[0]);
+	b = float(data[1]);
+	c = float(data[2]);
+	d = float(data[3]);
+	float x = a*0 + b + c*0 + d;
+	float y = a*0 + b*0 + c + d;
 
-	updateGridSelection({data[0], data[1]});
+	//updateGridSelection({data[0], data[1]});
+	updateGridSelection({x,y});
 
 	inputsRead = true;
 }
