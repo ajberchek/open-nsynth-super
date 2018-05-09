@@ -1,5 +1,4 @@
 // Socket implementation adapted from: https://www.geeksforgeeks.org/socket-programming-cc/
-#include <unistd.h>
 #include <stdio.h>
 #include <sys/socket.h>
 #include <stdlib.h>
@@ -8,13 +7,13 @@
 #include <mutex>
 #include <thread>
 #include <iostream>
+#include <vector>
 #define PORT    	4242
-#define DATA_LEN	4
+#define DATA_LEN 	4
 
 class InstrumentServer {
     public:
     InstrumentServer() {
-	std::cout << "!!INIT!!" << std::endl;
         // Creating socket file descriptor
         if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
             perror("socket failed");
@@ -68,6 +67,17 @@ class InstrumentServer {
         }).detach();
     }
 
+    std::vector<char> getCoords() {
+        std::vector<char> toRet;
+        m.lock();
+        toRet.push_back(currentData[0]);
+        toRet.push_back(currentData[1]);
+        toRet.push_back(currentData[2]);
+        toRet.push_back(currentData[3]);
+        m.unlock();
+        return toRet;
+    } 
+  
     private:
         int server_fd, new_socket;
         struct sockaddr_in address;

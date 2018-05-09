@@ -30,6 +30,8 @@ limitations under the License.
 #include "PositionScreen.h"
 #include "VolumeScreen.h"
 #include "NSynth.h"
+#include "InstrumentServer.h"
+
 
 
 class ofApp : public ofBaseApp{
@@ -93,6 +95,7 @@ class ofApp : public ofBaseApp{
 		EnvelopeScreen envelopeScreen;
 		// The volume adjustment screen.
 		VolumeScreen volumeScreen;
+		InstrumentServer server;
 
 		// The active screen.
 		BaseScreen *currentScreen;

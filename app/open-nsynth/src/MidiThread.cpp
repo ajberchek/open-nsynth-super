@@ -43,35 +43,6 @@ bool MidiThread::setup(const std::string &device, int channel){
 			ofLog(OF_LOG_WARNING) << "Failed to open MIDI input " << device;
 			return false;
 		}
-
-		// Configure the serial port at 38400 baud. Settings on the Raspberry Pi
-		// should adapt this to the MIDI baud rate of 31250.
-		struct termios tty;
-		memset(&tty, 0, sizeof tty);
-		if(tcgetattr(deviceFd, &tty) != 0){
-			return false;
-		}
-
-		cfsetospeed(&tty, B38400);
-		cfsetispeed(&tty, B38400);
-
-		tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS8;
-		tty.c_iflag &= ~IGNBRK;
-		tty.c_lflag = 0;
-		tty.c_oflag = 0;
-		tty.c_cc[VMIN]  = 1;
-		tty.c_cc[VTIME] = 0;
-
-		tty.c_iflag &= ~(IXON | IXOFF | IXANY);
-
-		tty.c_cflag |= (CLOCAL | CREAD);
-		tty.c_cflag &= ~(PARENB | PARODD);
-		tty.c_cflag &= ~CSTOPB;
-		tty.c_cflag &= ~CRTSCTS;
-
-		if(tcsetattr(deviceFd, TCSANOW, &tty) != 0){
-			return false;
-		}
 	}
 
 	return true;

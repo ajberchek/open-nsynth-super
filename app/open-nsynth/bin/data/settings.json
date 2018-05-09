@@ -1,7 +1,7 @@
 {
     "debug": false,
     "nsynth": {
-        "dataDirectory": "/home/pi/pads",
+        "dataDirectory": "/home/google/open-nsynth-super/opt/audio/onss_lite_audio/",
         "resolution": 9,
         "pitches": [24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84],
         "length": 60000,
@@ -10,8 +10,8 @@
     "corners": [
         {
             "instruments": [
-                {"name": "cleanbass", "display": "CLN BASS", "abbr": "CB"},
-                {"name": "synthbass", "display": "SYN BASS", "abbr": "SB"}
+                {"name": "synthbass", "display": "SYN BASS", "abbr": "SB"},
+                {"name": "cleanbass", "display": "CLN BASS", "abbr": "CB"}
             ]
         },
         {
@@ -22,14 +22,14 @@
         },
         {
             "instruments": [
-                {"name": "marimba", "display": "MARIMBA", "abbr": "MA"},
-                {"name": "electrotom", "display": "EL. TOM", "abbr": "ET"}
+                {"name": "distortedguitar", "display": "DIST. GTR", "abbr": "DG"},
+                {"name": "susvox", "display": "SUS. VOX", "abbr": "SV"}
             ]
         },
         {
             "instruments": [
-                {"name": "distortedguitar", "display": "DIST. GTR", "abbr": "DG"},
-                {"name": "susvox", "display": "SUS. VOX", "abbr": "SV"}
+                {"name": "marimba", "display": "MARIMBA", "abbr": "MA"},
+                {"name": "electrotom", "display": "EL. TOM", "abbr": "ET"}
             ]
         }
     ],
@@ -38,7 +38,7 @@
         "bufferSize": 128
     },
     "midi": {
-        "device": "/dev/ttyAMA0",
+        "device": "/dev/snd/midiC1D0",
         "channel": 1
     },
     "osc": {
